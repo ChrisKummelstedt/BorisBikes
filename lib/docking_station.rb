@@ -28,6 +28,10 @@ class DockingStation
 		end
 	end
 
+	def select_broken_bikes(van_capacity)
+		@bikes.reject {|bike| bike.working?}.first(van_capacity)
+	end
+
 private
 
 	attr_reader :bikes

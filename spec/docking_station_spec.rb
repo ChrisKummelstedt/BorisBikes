@@ -4,6 +4,8 @@ require 'bike'
 describe DockingStation do
 
   let(:bike) { double :bike, working?: true }
+  let(:broken_bike) { double :broken_bike, working?: false}
+  let(:van) {double :van, capacity: 2}
 
   it { is_expected.to respond_to :release_bike }
 
@@ -44,4 +46,31 @@ describe DockingStation do
       expect(dock.capacity).to eq 25
     end
   end
+
+  context "Van interaction" do
+
+    it "selects 1 broken bike" do
+      subject.dock(bike)
+      subject.dock(broken_bike)
+      expect(subject.select_broken_bikes(van.capacity)).to include broken_bike
+    end
+
+    it "does not include working bikes" do
+      subject.dock(bike)
+      subject.dock(broken_bike)
+      expect(subject.select_broken_bikes(van.capacity)).to_not include bike
+    end
+
+    it "with van capacity 2 it only selects 2 broken bikes" do
+      3.times do
+        subject.dock(broken_bike)
+      end
+      expect(subject.select_broken_bikes(xx).size).to eq 2
+    end
+
+    xit "removes broken bikes that are added to the van" do
+    end
+
+  end
+
 end
